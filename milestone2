@@ -1,5 +1,5 @@
 import math
-file1=open("Testcase1.txt","r")
+file1=open("Testcase2.txt","r")
 l=file1.read().split("\n")
 dict1={}
 for i in l:
@@ -18,7 +18,7 @@ shift=(int(l1[0]),int(l1[1]))
 
 dia=dict1['WaferDiameter']
 dia=int(dia)
-
+print(shift)
 size=dict1['DieSize']
 size1=size.split("x")
 size=[]
@@ -31,25 +31,21 @@ def generate_die_coordinates(dia, die_side):
     coordinates1=[]
     for i in range(num_dies_across):
         for j in range(num_dies_across):
-            x_center = i * die_side - radius
-            y_center = j * die_side - radius
-            coordinates.append((x_center-shift[0],y_center-shift[1]))
-            x_center = (i+0.5) * die_side - radius
-            y_center = (j+0.5) * die_side - radius
-            coordinates1.append((x_center-shift[0],y_center-shift[1]))
+            x_corner = i * die_side - radius + shift[0]
+            y_corner = j * die_side - radius + shift[1]
+            coordinates.append((x_corner, y_corner))
+            x_center = (i + 0.5) * die_side - radius + shift[0]
+            y_center = (j + 0.5) * die_side - radius + shift[1]
+            coordinates1.append((x_center, y_center))
     return coordinates,coordinates1
 
 coords,coords1 = generate_die_coordinates(dia, size[0])
-
 new_origin_x, new_origin_y = ref[0],ref[1]
-scale = 30
+scale = size[0]
 adjusted_points = [(int(x - new_origin_x) // scale, int(y - new_origin_y) // scale) for x, y in coords1]
 dict1={}
+f = open("output2.txt", "w")
 for i in range(len(coords)):
-    dict1[adjusted_points[i]]=coords[i]
-
-f = open("output1.txt", "w")
-for key, value in dict1.items():  
-    formatted_tuple = "(" + ", ".join(f"{num}" for num in key) + "):"+"(" + ", ".join(f"{num}" for num in value)+")\n"
+    formatted_tuple =  str(adjusted_points[i])+":"+str(coords[i])+ "\n"
     f.write(formatted_tuple)
 f.close()
