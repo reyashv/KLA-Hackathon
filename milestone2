@@ -24,22 +24,29 @@ size1=size.split("x")
 size=[]
 for i in size1:
     size.append(int(i))
-def generate_die_coordinates(dia, die_side):
-    radius = dia / 2
-    num_dies_across = int(dia//die_side)
-    coordinates = []
-    coordinates1=[]
-    for i in range(num_dies_across):
-        for j in range(num_dies_across):
-            x_corner = i * die_side - radius + shift[0]
-            y_corner = j * die_side - radius + shift[1]
-            coordinates.append((x_corner, y_corner))
-            x_center = (i + 0.5) * die_side - radius + shift[0]
-            y_center = (j + 0.5) * die_side - radius + shift[1]
-            coordinates1.append((x_center, y_center))
-    return coordinates,coordinates1
 
-coords,coords1 = generate_die_coordinates(dia, size[0])
+def generate_die_coordinates(dia, die_length, die_width):
+    radius = dia / 2
+    num_dies_across_length = int(dia // die_length)
+    num_dies_across_width = int(dia // die_width)
+
+    coordinates = []  
+    coordinates1 = []  
+
+    for i in range(num_dies_across_length):
+        for j in range(num_dies_across_width):
+            x_corner = i * die_length - radius + shift[0]
+            y_corner = j * die_width - radius + shift[1]
+            x_center = (i + 0.5) * die_length - radius + shift[0]
+            y_center = (j + 0.5) * die_width - radius + shift[1]
+
+            if x_center**2 + y_center**2 <= radius**2:
+                coordinates.append((x_corner, y_corner))
+                coordinates1.append((x_center, y_center))
+
+    return coordinates, coordinates1
+
+coords,coords1 = generate_die_coordinates(dia, size[0],size[1])
 new_origin_x, new_origin_y = ref[0],ref[1]
 scale = size[0]
 adjusted_points = [(int(x - new_origin_x) // scale, int(y - new_origin_y) // scale) for x, y in coords1]
