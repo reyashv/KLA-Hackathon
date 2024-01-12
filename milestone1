@@ -1,0 +1,38 @@
+import math
+def pointAtangle(center, radius, angle):
+    x = center[0] + radius * math.cos(angle)
+    y = center[1] + radius * math.sin(angle)
+    return x, y
+
+def divide_line_into_n_parts(p1, p2, n):
+    #distance = distance_between_points(point1, point2)
+    dx = (p2[0] - p1[0]) / (n - 1)
+    dy = (p2[1] - p1[1]) / (n - 1)
+    return [(p1[0] + i * dx, p1[1] + i * dy) for i in range(n)]
+
+file1=open("Testcase4.txt","r")
+l=file1.read().split("\n")
+dict1={}
+for i in l:
+    l=i.split(":")
+    dict1[l[0]]=l[1]
+lis1=[]
+center=(0,0)
+lis1.append(center)
+radius=int(dict1['WaferDiameter'])/2
+n=dict1['NumberOfPoints']
+circle_radius = radius
+angle = math.radians(int(dict1['Angle']))
+point = pointAtangle(center, radius, angle)
+print(point)
+point1=(-point[0],-point[1])
+n=int(n)
+#m=n//2
+p1=divide_line_into_n_parts(point,point1,n)
+print(len(p1))
+f = open("output4.txt", "w")
+for i in p1:
+    formatted_tuple = "(" + ", ".join(f"{num:.4f}" for num in i) + ")\n"
+    f.write(formatted_tuple)
+f.close()
+
