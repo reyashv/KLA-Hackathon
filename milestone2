@@ -1,0 +1,55 @@
+import math
+file1=open("Testcase1.txt","r")
+l=file1.read().split("\n")
+dict1={}
+for i in l:
+    l=i.split(":")
+    dict1[l[0]]=l[1]
+
+a=dict1['ReferenceDie']
+a=a.strip("(").strip(")")
+l=a.split(",")
+ref=(int(l[0]),int(l[1]))
+
+a1=dict1['DieShiftVector']
+a1=a1.strip("(").strip(")")
+l1=a1.split(",")
+shift=(int(l1[0]),int(l1[1]))
+
+dia=dict1['WaferDiameter']
+dia=int(dia)
+
+size=dict1['DieSize']
+size1=size.split("x")
+size=[]
+for i in size1:
+    size.append(int(i))
+def generate_die_coordinates(dia, die_side):
+    radius = dia / 2
+    num_dies_across = int(dia//die_side)
+    coordinates = []
+    coordinates1=[]
+    for i in range(num_dies_across):
+        for j in range(num_dies_across):
+            x_center = i * die_side - radius
+            y_center = j * die_side - radius
+            coordinates.append((x_center-shift[0],y_center-shift[1]))
+            x_center = (i+0.5) * die_side - radius
+            y_center = (j+0.5) * die_side - radius
+            coordinates1.append((x_center-shift[0],y_center-shift[1]))
+    return coordinates,coordinates1
+
+coords,coords1 = generate_die_coordinates(dia, size[0])
+
+new_origin_x, new_origin_y = ref[0],ref[1]
+scale = 30
+adjusted_points = [(int(x - new_origin_x) // scale, int(y - new_origin_y) // scale) for x, y in coords1]
+dict1={}
+for i in range(len(coords)):
+    dict1[adjusted_points[i]]=coords[i]
+
+f = open("output1.txt", "w")
+for key, value in dict1.items():  
+    formatted_tuple = "(" + ", ".join(f"{num}" for num in key) + "):"+"(" + ", ".join(f"{num}" for num in value)+")\n"
+    f.write(formatted_tuple)
+f.close()
